@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="A front-end template that helps you build fast, modern mobile web apps.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>iOS私有api检查</title>
+    <!-- Add to homescreen for Chrome on Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <!-- Add to homescreen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <link rel="shortcut icon" href="/static/res/favicon.ico">
+    <!--<link rel="stylesheet" href="https://fonts.useso.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
+    <link rel="stylesheet" href="https://fonts.useso.com/icon?family=Material+Icons">-->
+    <link rel="stylesheet" href="/static/res/css/material.min.css">
+    <link rel="stylesheet" href="/static/res/css/dropzone.min.css">
+    <link rel="stylesheet" href="/static/res/css/styles.css">
+    <style type="text/css">
+    	#ipa_file {
+			 border: 2px solid rgb(66,158,158);
+			 width: 100%;
+		  }
+      #overview section {
+        margin-top: 10px;
+        margin-bottom: 10px;
+      }
+    </style>
+  </head>
+  <body class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+      <header class="mdl-layout__header mdl-layout__header--scroll mdl-color--primary">
+        <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
+          <a href="#overview" class="mdl-layout__tab is-active">Home</a>
+          <a href="#features" class="mdl-layout__tab">FAQ</a>
+        </div>
+      </header>
+      <main class="mdl-layout__content">
+        <div class="mdl-layout__tab-panel is-active" id="overview">
+          <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
+            <form action="#" class="dropzone dz-clickable" id="ipa_file" method="post" enctype="multipart/form-data">
+				      <div class="dz-message" >Drop files here or click to upload.<br>
+					       <span class="note">(文件拖放到这里或者点击选择ipa文件 <strong>检查iOS私有api使用情况</strong>)</span>
+      				</div>
+      			</form>
+          </section>
+          <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
+            <div class="mdl-card mdl-cell mdl-cell--12-col">
+              <ul class="toc">
+                <a href="#">App Name: <span id="app_name"></span></a>
+                <a href="#">App Version: <span id="version"></span></a>
+                <a href="#">Bundle identifier: <span id="bundle_identifier"></span></a>
+                <a href="#">Target os version: <span id="target_os_version"></span></a>
+                <a href="#">Minimum os version: <span id="minimum_os_version"></span></a>
+                <a href="#">App Architectures: <span id="app_arcs"></span></a>
+                <a href="#">Profile Type: <span id="profile_type"></span></a>
+                <a href="#">Expiration Date: <span id="expiration"></span></a>
+              </ul>
+            </div>
+          </section>
+          <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp" id="api_in_app">
+            <div class="mdl-card mdl-cell mdl-cell--12-col">
+              <div id="api_append_div" class="mdl-card__supporting-text mdl-grid mdl-grid--no-spacing">
+                <h4 class="mdl-cell mdl-cell--12-col">Private API in APP</h4>
+                
+              </div>
+            </div>
+          </section>
+          <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp" id="framework_in_app">
+            <div class="mdl-card mdl-cell mdl-cell--12-col">
+              <div id="framework_append_div" class="mdl-card__supporting-text mdl-grid mdl-grid--no-spacing">
+                <h4 class="mdl-cell mdl-cell--12-col">Private Framework in APP</h4>
+                
+              </div>
+            </div>
+          </section>
+        </div>
+        <div class="mdl-layout__tab-panel" id="features">
+          <section class="section--center mdl-grid mdl-grid--no-spacing">
+            <div class="mdl-cell mdl-cell--12-col">
+              <h4>FAQ</h4>
+              私有API检查的原因在于：苹果在app提审的时候，会检查app使用私有api的情况，对于使用了私有api的app，不予通过，这个工具的目地就是在提审之前检查一下，提高通过率。
+              <ul class="toc">
+                <h4>Contents</h4>
+                <a href="#func">一、功能</a>
+                <a href="#how">二、如何使用</a>
+                <a href="#what">三、检查原理</a>
+                <a href="#note">四、Note</a>
+              </ul>
+
+              <h5 id="func">一、功能</h5>
+              目前功能主要有三：
+              <ul>
+                <li>从ipa中提取一些基本信息，例如app名字，sdk版本，包名等，可以辅助QA日常工作。</li>
+                <li>ipa架构检查，可以看出是否支持64位架构，可以辅助AppStore提审。</li>
+                <li>ipa使用私有api情况，可以辅助AppStore提审。</li>
+              </ul>
+
+
+              <h5 id="how">二、如何使用</h5>
+              运行方式有二，建议第二种web方式：
+              <ul>
+                <li>修改iOS_private.py main方法中的ipa路径，运行即可。</li>
+                <li>使用Web上传运行的方式，运行python run_web.py（请先配置flask运行环境），然后浏览器输入127.0.0.1:9527 将ipa拖入上传框等待即可看到检查结果。</li>
+              </ul>
+
+              <h5 id="what">三、检查原理</h5>
+              <ul>
+                <li>通过mac上xcode的开发环境，找出不同sdk版本的public framework和private framework；通过class-dump反编译出public framework中的api，分别设置为集合PU和PR。</li>
+                <li>通过xcode代码提示的sqlite数据库查询出所有的document api，设置为集合DA。<li>
+                <li>那么PU - DA为公有framework中的私有api，设置为A<li>
+                <li>PR为私有framework中的api都不能使用，则私有api集合PRAPI = A + PR<li>
+                <li>使用class-dump反编译ipa中的app文件，然后和PRAPI集合取交集即可获得。<li>
+                <li>其中有一些细节的集合操作，来准确定位api，例如使用方法名和类名来唯一确定API方法。<li>
+              </ul>
+
+              <h5 id="note">四、Note</h5>
+              <p>1. 私有的api ＝ (class-dump Framework下的库生成的头文件中的api - (Framework下的头文件里的api = 有文档的api + 没有文档的api)) + PrivateFramework下的api。</p>
+              <p>2. 私有api在公开的Framework及私有的PrivateFramework都有。</p>
+              <p>3. 请暂时暂mac上运行，linux上暂时没有找到合适的、代替otool的工具，求推荐^^!</p>
+            </div>
+          </section>
+        </div>
+        <footer class="mdl-mega-footer">
+          <div class="mdl-mega-footer--bottom-section">
+            <div class="mdl-logo">
+              Netease.com 2015
+            </div>
+          </div>
+        </footer>
+      </main>
+    </div>
+    <script type="text/javascript" src="/static/res/js/jquery.min.js"></script>
+    <script src="/static/res/js/material.min.js"></script>
+    <script src="/static/res/js/dropzone.min.js"></script>
+    <script src="/static/res/js/ios_private.js"></script>
+  </body>
+</html>
